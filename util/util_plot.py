@@ -94,7 +94,7 @@ def draw_protein_residues_hist_image(train_s,trainlabel,test_data,config):
     width = 0.4
     plt.bar(ind, Py, color='#b5cce4', edgecolor='#929195', width=width, alpha=1.0, label="Positive")
     plt.bar(ind + width, Ny, color='#f9f8fd', edgecolor='#929195', width=width, alpha=0.50, label="Negative")
-    plt.legend(loc="upper left", )
+    plt.legend(loc="upper left" )
     plt.legend(frameon=False)
     plt.xticks(np.arange(20) + 20 + 0.2, ('A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G',
                                           'H', 'I', 'L', 'K', 'M', 'F', 'P', 'S',
@@ -298,9 +298,22 @@ def draw_dna_rna_length_distribution_image(train_data,test_data,config):
     # train_data 中是处理之后的训练集中的正负例样本长度集合
     # test_data 中是处理之后的测试集中的正负例样本长度集合
     # 或者在这个方法里用循环处理数据
-
-    data1 = train_data.positive_lengths
-    data2 = train_data.negative_lengths
+    # train_data 列表 01
+    train_positive_lengths=[]
+    train_negative_lengths=[]
+    test_positive_lengths = []
+    test_negative_lengths = []
+    train_sequences = train_data[0]
+    train_labels = train_data[1]
+    test_seauences = test_data[0]
+    test_labels = test_data[1]
+    for i in range(len(train_labels)):
+        if train_labels[i] == 1:
+            train_positive_lengths.append(len(train_sequences[i]))
+        else:
+            train_negative_lengths.append(len(train_sequences[i]))
+    data1 = positive_lengths
+    data2 = negative_lengths
     xlabel = 'Length'
     ylabel = 'Number'
     fig, ax = plt.subplots()
@@ -318,6 +331,11 @@ def draw_dna_rna_length_distribution_image(train_data,test_data,config):
     plt.savefig('{}/{}/{}.{}'.format(config.path_save, config.learn_name, 'statistics', config.save_figure_type))
     plt.show()
 
+    for i in range(len(test_labels)):
+        if train_labels[i] == 1:
+            test_positive_lengths.append(len(test_seauences[i]))
+        else:
+            test_negative_lengths.append(len(test_seauences[i]))
     data1 = test_data.positive_lengths
     data2 = test_data.negative_lengths
     xlabel = 'Length'
@@ -326,7 +344,8 @@ def draw_dna_rna_length_distribution_image(train_data,test_data,config):
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
     plt.legend(loc="upper left", )
-    plt.title('The length of sequences(Test)')
+
+    plt.title('The length of'+config['type']+'\'s sequences(Test)')
     plt.xlabel(xlabel, fontsize='x-large', fontweight='light')
     plt.ylabel(ylabel, fontsize='x-large', fontweight='light')
     plt.hist(data1, bins=10, edgecolor='black', alpha=1, color='#b5cce4', histtype='bar',
