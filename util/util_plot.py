@@ -5,13 +5,21 @@ import umap
 import torch
 import numpy as np
 from sklearn.preprocessing import StandardScaler
+import os
 
 colors = ["#8D5CDC", "#EA52BC", "#FF6691", "#FF946B","#FFC859", "#F9F871"]
+def draw_motif(filename):
+    # filename 就是要绘制的motif图的fasta文件名记得带上后缀‘fasta’
+
+    # os.system('conda activate hwj_lib')
+    # 要在环境内安装weblogo包
+    os.system('weblogo --format PNG ' + '< ' + filename + ' ' + ' > ' + filename[0:-6] + '.png')
 
 def draw_protein_residues_hist_image(train_s,trainlabel,test_data,config):
     # train_data 和 test_data 要保证有sequences 和 labels成员属性
     keyvalueP = {}
     keyvalueF = {}
+
     keyvalueP['A'] = 0
     keyvalueP['R'] = 0
     keyvalueP['N'] = 0
@@ -290,6 +298,7 @@ def draw_dna_rna_length_distribution_image(train_data,test_data,config):
     # train_data 中是处理之后的训练集中的正负例样本长度集合
     # test_data 中是处理之后的测试集中的正负例样本长度集合
     # 或者在这个方法里用循环处理数据
+
     data1 = train_data.positive_lengths
     data2 = train_data.negative_lengths
     xlabel = 'Length'
